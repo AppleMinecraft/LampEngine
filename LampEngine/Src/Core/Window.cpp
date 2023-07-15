@@ -1,6 +1,8 @@
 #include "Window.h"
 
 namespace LampEngine {
+	static Window* CURRENT_WINDOW_INSTANCE = nullptr;
+
 	Window::Window(const char* title, int width, int height) : m_Title(title), m_WindowColor(0.0f, 0.05f, 0.1f) {
 		// Creating Window
 		m_Window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -15,15 +17,14 @@ namespace LampEngine {
 			glfwTerminate();
 			return;
 		} LOGdebug("Glad Has Been Loaded.");
+		CURRENT_WINDOW_INSTANCE = this;
+	}
+	Window::~Window() {
+		CURRENT_WINDOW_INSTANCE = nullptr;
 	}
 	void Window::update() {
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
-	}
-	void Window::clear() {
-		// TODO: get renderer as parameter and move this into renderer
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(m_WindowColor.r, m_WindowColor.g, m_WindowColor.b, 0);
 	}
 	void Window::close() {
 		glfwDestroyWindow(m_Window);
@@ -62,5 +63,8 @@ namespace LampEngine {
 	}
 	bool Window::isRunning() const {
 		return !glfwWindowShouldClose(m_Window);
+	}
+	Window* Window::GetCurrentWindowInstance() {
+		return CURRENT_WINDOW_INSTANCE;
 	}
 }

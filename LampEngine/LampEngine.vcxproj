@@ -99,7 +99,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Renderer.h" />
     <ClInclude Include="Src\Core\Shader.h" />
+    <ClInclude Include="Src\Core\Texture.h" />
     <ClInclude Include="Src\Utils\FileUtils.h" />
     <ClInclude Include="Src\Core\GraphicsLoader.h" />
     <ClInclude Include="Src\Models\EmptyModel.h" />
@@ -391,7 +393,9 @@
     <ClInclude Include="Vendor\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Renderer.cpp" />
     <ClCompile Include="Src\Core\Shader.cpp" />
+    <ClCompile Include="Src\Core\Texture.cpp" />
     <ClCompile Include="Src\Utils\FileUtils.cpp" />
     <ClCompile Include="Src\Core\GraphicsLoader.cpp" />
     <ClCompile Include="Src\Models\EmptyModel.cpp" />

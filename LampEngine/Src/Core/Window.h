@@ -8,9 +8,9 @@ namespace LampEngine {
 	class Window {
 	public:
 		Window(const char* title = "UntitledWindow", int width = 800, int height = 800);
-		
+		~Window();
+
 		void update();
-		void clear();
 		void close();
 		void setWindowTitle(const char* title);
 		void setWindowSize(int width, int height);
@@ -23,6 +23,8 @@ namespace LampEngine {
 		glm::vec2   getWindowSize()   const;
 		glm::vec3   getWindowColor()  const;
 		bool isRunning() const;
+
+		static Window* GetCurrentWindowInstance();
 	private:
 		GLFWwindow* m_Window;
 		const char* m_Title;

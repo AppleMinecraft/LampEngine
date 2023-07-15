@@ -21,12 +21,10 @@ int main() {
 	Shader shader("Res/Shaders/default_shader.vertex", "Res/Shaders/default_shader.fragment");
 
 	while (window.isRunning()) {
-		window.clear();
-		/* RENDERER */
+		Renderer::Clear();
 		shader.bind();
-		glBindVertexArray(model.getVAOID());
-		glDrawElements(GL_TRIANGLES, model.getVerticesCount(), GL_UNSIGNED_INT, 0);
-		/* RENDERER */
+		Renderer::Render(model);
+
 		window.update();
 	}
 
