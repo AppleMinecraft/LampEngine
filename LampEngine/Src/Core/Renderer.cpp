@@ -6,8 +6,10 @@ namespace LampEngine {
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(color.r, color.g, color.b, 1.0f);
 	}
-	void Renderer::Render(EmptyModel model) {
-		glBindVertexArray(model.getVAOID());
-		glDrawElements(GL_TRIANGLES, model.getVerticesCount(), GL_UNSIGNED_INT, 0);
+	void Renderer::Render(Entity& entity) {
+		TextureModel& model = entity.getModel();
+
+		glBindVertexArray(model.getEmptyModel().getVAOID());
+		glDrawElements(GL_TRIANGLES, model.getEmptyModel().getVerticesCount(), GL_UNSIGNED_INT, 0);
 	}
 }

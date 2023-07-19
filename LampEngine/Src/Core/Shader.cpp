@@ -11,6 +11,7 @@ namespace LampEngine {
 		glLinkProgram(m_ID);
 		glValidateProgram(m_ID);
 		LOGdebug("A Shader Program Has Been Compiled.");
+		bind();
 	}
 	void Shader::Uniform1f(const char* name, float value) {
 		glUniform1f(glGetUniformLocation(m_ID, name), value);

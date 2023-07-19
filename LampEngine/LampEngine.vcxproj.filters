@@ -889,11 +889,14 @@
       <Filter>Vendor\glm</Filter>
     </ClInclude>
     <ClInclude Include="Src\Models\EmptyModel.h" />
-    <ClInclude Include="Src\Core\GraphicsLoader.h" />
+    <ClInclude Include="Src\Core\Loader.h" />
     <ClInclude Include="Src\Utils\FileUtils.h" />
     <ClInclude Include="Src\Core\Shader.h" />
     <ClInclude Include="Src\Core\Texture.h" />
     <ClInclude Include="Src\Core\Renderer.h" />
+    <ClInclude Include="Src\Models\TextureModel.h" />
+    <ClInclude Include="Src\Core\Camera.h" />
+    <ClInclude Include="Src\Core\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Core.cpp">
@@ -910,11 +913,15 @@
     </ClCompile>
     <ClCompile Include="Vendor\glad\glad.c" />
     <ClCompile Include="Src\Models\EmptyModel.cpp" />
-    <ClCompile Include="Src\Core\GraphicsLoader.cpp" />
+    <ClCompile Include="Src\Core\Loader.cpp" />
     <ClCompile Include="Src\Utils\FileUtils.cpp" />
     <ClCompile Include="Src\Core\Shader.cpp" />
     <ClCompile Include="Src\Core\Texture.cpp" />
     <ClCompile Include="Src\Core\Renderer.cpp" />
+    <ClCompile Include="Vendor\stb\stb.cpp" />
+    <ClCompile Include="Src\Models\TextureModel.cpp" />
+    <ClCompile Include="Src\Core\Camera.cpp" />
+    <ClCompile Include="Src\Core\Entity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
