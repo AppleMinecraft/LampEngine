@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+
 #include "Core/Window.h"
 #include "Core/Entity.h"
 #include "Core/Shader.h"
@@ -12,6 +13,6 @@ namespace LampEngine {
 	{
 	public:
 		static void Clear();
-		void static Render(Entity& entity);
+		void static Render(Entity& entity, Shader& shader);
 	};
 }

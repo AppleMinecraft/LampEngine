@@ -1,10 +1,10 @@
 #include "Shader.h"
-// TODO: Verify Shader Uniforms
 
 namespace LampEngine {
 	Shader::Shader(const char* vertexShader, const char* fragmentShader, bool readFromFile) {
 		GLuint vertexID = loadShader(vertexShader, GL_VERTEX_SHADER, readFromFile);
 		GLuint fragmentID = loadShader(fragmentShader, GL_FRAGMENT_SHADER, readFromFile);
+
 		m_ID = glCreateProgram();
 		glAttachShader(m_ID, vertexID);
 		glAttachShader(m_ID, fragmentID);
@@ -38,22 +38,18 @@ namespace LampEngine {
 		return m_ID;
 	}
 	GLuint Shader::loadShader(const char* shader, int type, bool readFromFile) {
-		// Reading Shader Source
 		std::string shaderSrc;
 		if (readFromFile) shaderSrc = FileUtils::ReadTextFile(shader);
 		else shaderSrc = shader;
 
-		// Creting Shader
 		const char* shaderCode = shaderSrc.c_str();
 		GLint hasCompiled;
 		GLuint shaderID = glCreateShader(type);
 
-		// Compiling Shader
 		glShaderSource(shaderID, 1, &shaderCode, NULL);
 		glCompileShader(shaderID);
 		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &hasCompiled);
 
-		// Checking For Errors
 		if (hasCompiled == GL_FALSE) {
 			std::string shaderType;
 			switch (type) {

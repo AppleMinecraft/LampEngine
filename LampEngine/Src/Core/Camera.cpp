@@ -1,6 +1,11 @@
 #include "Camera.h"
+#include "Core/Window.h"
+
 namespace LampEngine {
-	Camera::Camera(glm::vec3 position, glm::vec3 rotation): position(position), rotation(rotation) {
+	Camera::Camera(glm::vec3 position, glm::vec3 rotation):
+		position(position),
+		rotation(rotation)
+	{
 	}
 
 	void Camera::matrix(Entity& entity, Shader& shader) {
@@ -9,7 +14,7 @@ namespace LampEngine {
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
-		Window* window = Window::GetCurrentWindowInstance();
+		glm::vec2 windowSize = Window::GetCurrentWindowInstance()->getWindowSize();
 
 		// ModelMatrix
 		model = glm::translate(model, entity.position);
@@ -23,7 +28,7 @@ namespace LampEngine {
 		view = glm::rotate(view, rotation.y, glm::vec3(0.0f, -1.0f, 0.0f));
 		view = glm::rotate(view, rotation.z, glm::vec3(0.0f, 0.0f, -1.0f));
 		// ProjectionMatrix
-		proj = glm::perspective(glm::radians(FOV), (float)window->getWindowSize().x / window->getWindowSize().y, 0.1f, 100.0f);
+		proj = glm::perspective(glm::radians(FOV), (float)windowSize.x / windowSize.y, 0.1f, 100.0f);
 
 		shader.Uniform4x4mat("model", model);
 		shader.Uniform4x4mat("view", view);

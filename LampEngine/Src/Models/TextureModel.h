@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Core/Texture.h"
 #include "Models/EmptyModel.h"
 
@@ -6,7 +7,7 @@ namespace LampEngine {
 	class TextureModel
 	{
 	public:
-		TextureModel(GLuint textureID, EmptyModel model);
+		TextureModel(GLuint textureID, EmptyModel& model);
 
 		GLuint getTextureID();
 		EmptyModel& getEmptyModel();

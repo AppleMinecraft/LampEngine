@@ -39,9 +39,6 @@
     <ClInclude Include="Src\Core\Window.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Src\LampEngine.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="Vendor\glm\common.hpp">
       <Filter>Vendor\glm</Filter>
     </ClInclude>
@@ -897,6 +894,16 @@
     <ClInclude Include="Src\Models\TextureModel.h" />
     <ClInclude Include="Src\Core\Camera.h" />
     <ClInclude Include="Src\Core\Entity.h" />
+    <ClInclude Include="Vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="Vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Vendor\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Vendor\imgui\imgui.h" />
+    <ClInclude Include="Vendor\imgui\imconfig.h" />
+    <ClInclude Include="Vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="Vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="Src\LampEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Core.cpp">
@@ -922,6 +929,13 @@
     <ClCompile Include="Src\Models\TextureModel.cpp" />
     <ClCompile Include="Src\Core\Camera.cpp" />
     <ClCompile Include="Src\Core\Entity.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

@@ -1,7 +1,5 @@
 #include <LampEngine.h>
 
-using namespace LampEngine;
-
 GLfloat vertices[] = {
 	-0.5f, -0.5f, 0.0f,
 	-0.5f,  0.5f, 0.0f,
@@ -21,11 +19,15 @@ GLuint indices[] = {
 	0, 3, 2 
 };
 
+using namespace LampEngine;
+
 int main() {
-	// DefaultStuff
 	Core::Init();
-	Window window("LampEngine.SandBox");
+	Window window("LampEngine.SandBox", 1200, 720);
+	Core::ImGui_Init(window);
+
 	Camera camera(glm::vec3{0.0f, 0.0f, -5.0f});
+	window.camera = &camera;
 
 	// Object1
 	Texture texture("Res/Textures/Texture.png", true);
@@ -38,10 +40,13 @@ int main() {
 
 	while (window.isRunning()) {
 		Renderer::Clear();
-		shader.bind();
-		camera.matrix(entity, shader);
+		Core::ImGui_NewFrame();
 
-		Renderer::Render(entity);
+		// Object1
+		shader.bind();
+		Renderer::Render(entity, shader);
+
+		Core::ImGui_Render();
 		window.update();
 	}
 

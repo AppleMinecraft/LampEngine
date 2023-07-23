@@ -17,6 +17,7 @@ namespace LampEngine {
 		void Uniform3v(const char* name, glm::vec3 value);
 		void Uniform4v(const char* name, glm::vec4 value);
 		void Uniform4x4mat(const char* name, glm::mat4x4 value);
+
 		void bind();
 
 		GLuint getShaderID();

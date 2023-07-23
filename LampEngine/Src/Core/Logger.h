@@ -1,4 +1,5 @@
 #pragma once
+
 #include <memory>
 #include <spdlog/spdlog.h>
 
@@ -6,11 +7,12 @@ namespace LampEngine {
 	class Logger {
 	public:
 		static void Init();
+
 		static std::shared_ptr<spdlog::logger> GetEngineLogger();
 		static std::shared_ptr<spdlog::logger> GetApplicationLogger();
 	private:
-		static std::shared_ptr<spdlog::logger> m_EngineLogger;
-		static std::shared_ptr<spdlog::logger> m_ApplicationLogger;
+		static std::shared_ptr<spdlog::logger> ENGINE_LOGGER;
+		static std::shared_ptr<spdlog::logger> APPLICATION_LOGGER;
 	};
 }
 

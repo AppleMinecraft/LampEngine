@@ -2,12 +2,14 @@
 
 namespace LampEngine {
 	void Renderer::Clear() {
-		glm::vec3 color = Window::GetCurrentWindowInstance()->getWindowColor();
+		Window* window = Window::GetCurrentWindowInstance();
+
 		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(color.r, color.g, color.b, 1.0f);
-		glViewport(0, 0, Window::GetCurrentWindowInstance()->getWindowSize().x, Window::GetCurrentWindowInstance()->getWindowSize().y);
+		glClearColor(window->windowColor.r, window->windowColor.g, window->windowColor.b, 1.0f);
+		glViewport(0, 0, window->getWindowSize().x, window->getWindowSize().y);
 	}
-	void Renderer::Render(Entity& entity) {
+	void Renderer::Render(Entity& entity, Shader& shader) {
+		Window::GetCurrentWindowInstance()->camera->matrix(entity, shader);
 		TextureModel& model = entity.getModel();
 
 		glBindVertexArray(model.getEmptyModel().getVAOID());

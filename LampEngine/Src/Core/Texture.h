@@ -4,15 +4,17 @@
 #include "Core/Logger.h"
 
 namespace LampEngine {
+
 	struct TextureSettings {
 		GLuint wrapS = GL_REPEAT;
 		GLuint wrapT = GL_REPEAT;
 		GLuint minFilter = GL_LINEAR;
 		GLuint magFilter = GL_LINEAR;
 	};
+
 	class Texture {
 	public:
-		Texture(const char* filename, bool flip, TextureSettings textureSettings = TextureSettings());
+		Texture(const char* filename, bool flip, TextureSettings& textureSettings = TextureSettings());
 
 		int getWidth() const;
 		int getHeight() const;
@@ -20,6 +22,7 @@ namespace LampEngine {
 		int getOpenGLColorChannels() const;
 		unsigned char* getData() const;
 		TextureSettings getTextureSettings() const;
+
 		void free();
 	private:
 		TextureSettings m_TextureSettings;

@@ -1,10 +1,12 @@
 #include "Texture.h"
 
 namespace LampEngine {
-	Texture::Texture(const char* filename, bool flip, TextureSettings textureSettings) : m_TextureSettings(textureSettings) {
+	Texture::Texture(const char* filename, bool flip, TextureSettings& textureSettings) : 
+		m_TextureSettings(textureSettings) {
 		stbi_set_flip_vertically_on_load(flip);
 		m_Bytes = stbi_load(filename, &m_Width, &m_Heights, &m_Channels, 0);
-		if (m_Bytes == NULL)
+
+		if (m_Bytes == nullptr)
 			LOGerror("Failed To Load Texture '{0}'!", filename);
 		else
 			LOGdebug("Texture Had Been Loaded At '{0}' With Size Of {1}x{2} and flip={3}.", filename, m_Width, m_Heights, flip);

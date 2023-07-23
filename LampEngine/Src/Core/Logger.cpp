@@ -2,29 +2,29 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace LampEngine {
-	std::shared_ptr<spdlog::logger> Logger::m_EngineLogger;
-	std::shared_ptr<spdlog::logger> Logger::m_ApplicationLogger;
-	void Logger::Init() {
-		// Creating Logger
-		spdlog::set_pattern("[%^%n %l%$]: %v");
-		m_EngineLogger      = spdlog::stdout_color_mt("LampEngine");
-		m_ApplicationLogger = spdlog::stdout_color_mt("Application");
+	std::shared_ptr<spdlog::logger> Logger::ENGINE_LOGGER;
+	std::shared_ptr<spdlog::logger> Logger::APPLICATION_LOGGER;
 
-		// Setting Log Level
+	void Logger::Init() {
+		spdlog::set_pattern("[%^%n %l%$]: %v");
+
+		ENGINE_LOGGER = spdlog::stdout_color_mt("LampEngine");
+		APPLICATION_LOGGER = spdlog::stdout_color_mt("Application");
+
 		#ifdef LAMP_BUILD_DEBUG
-		m_EngineLogger->set_level(spdlog::level::trace);
-		m_ApplicationLogger->set_level(spdlog::level::trace);
+		ENGINE_LOGGER->set_level(spdlog::level::trace);
+		APPLICATION_LOGGER->set_level(spdlog::level::trace);
 		#endif
 		#ifdef LAMP_BUILD_RELEASE
-		m_EngineLogger->set_level(spdlog::level::info);
-		m_ApplicationLogger->set_level(spdlog::level::info);
+		ENGINE_LOGGER->set_level(spdlog::level::info);
+		APPLICATION_LOGGER->set_level(spdlog::level::info);
 		#endif 
 		LOGdebug("Logger Has Been Loaded.");
 	}
 	std::shared_ptr<spdlog::logger> Logger::GetEngineLogger() {
-		return m_EngineLogger;
+		return ENGINE_LOGGER;
 	}
 	std::shared_ptr<spdlog::logger> Logger::GetApplicationLogger() {
-		return m_ApplicationLogger;
+		return APPLICATION_LOGGER;
 	}
 }

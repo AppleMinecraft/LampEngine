@@ -1,9 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-#include "Core/Window.h"
 #include "Core/Entity.h"
 #include "Core/Shader.h"
 
