@@ -3,14 +3,17 @@
 #include <glad/glad.h>
 
 #include "Core/Logger.h"
-#include "Models/EmptyModel.h"
-#include "Models/TextureModel.h"
+#include "Resources/Mesh.h"
+#include "Renderable/Model.h"
+#include "Utils/FileUtils.h"
+#include "Utils/_OBJLoader.h"
 
 namespace LampEngine {
+
+	// Loader class makes it easy to load Model, etc.
 	class Loader {
 	public:
-		static TextureModel LoadTextureModel(Texture& texture, GLfloat* vertices, uint32_t verticesSize, GLuint* indices, uint32_t indicesSize, GLfloat* uv, uint32_t uvSize);
-		static EmptyModel   LoadEmptyModel(GLfloat* vertices, uint32_t verticesSize, GLuint* indices, uint32_t indicesSize, GLfloat* uv, uint32_t uvSize);
-		static void         LoadVBO(uint8_t attributeNumber, GLfloat* data, uint32_t dataSize, uint8_t dataLength = 3, GLenum dataType = GL_FLOAT);
+		// Loads obj model form path and returns Model class with all the meshes
+		static Model LoadOBJModel(std::string path);
 	};
 }

@@ -3,7 +3,7 @@
 namespace LampEngine {
 	static Window* CURRENT_WINDOW_INSTANCE = nullptr;
 
-	Window::Window(const char* title, uint16_t width, uint16_t height) :
+	Window::Window(const char* title, int width, int height) :
 		m_Title(title),
 		windowColor(0.0f, 0.05f, 0.1f) 
 	{
@@ -32,13 +32,19 @@ namespace LampEngine {
 		CURRENT_WINDOW_INSTANCE = nullptr;
 	}
 	void Window::update() const {
+		glViewport(0, 0, getWindowSize().x, getWindowSize().y);
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
+	}
+	void Window::clear() const {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(windowColor.r, windowColor.g, windowColor.b, 1.0f);
 	}
 	void Window::close() const {
 		glfwDestroyWindow(m_Window);
 		glfwSetWindowShouldClose(m_Window, true);
 		glfwTerminate();
+		CURRENT_WINDOW_INSTANCE = nullptr;
 	}
 	void Window::setWindowTitle(const char* title) {
 		m_Title = title;

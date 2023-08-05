@@ -10,14 +10,17 @@
 #include "Core/Window.h"
 
 namespace LampEngine {
+
+	// This class contains useful methods.
 	class Core {
 	public:
-		/// <summary>
-		/// Loads OpenGL And LampEngine Logger etc.
-		/// </summary>
+		// Loads OpenGL And LampEngine Logger etc.
 		static void Init();
+		// Call this after Core::Init if you want ImGui, this initilizes ImGui.
 		static void ImGui_Init(Window& window);
+		// Call this after Window::Clear to create ImGui new frame.
 		static void ImGui_NewFrame();
+		// Call this before Window::Update to render ImGui.
 		static void ImGui_Render();
 	};
 }

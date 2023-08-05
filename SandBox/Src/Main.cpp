@@ -1,24 +1,4 @@
 #include <LampEngine.h>
-
-GLfloat vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f,
-	 0.5f,  0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f
-};
-
-GLfloat uv[] = {
-	0, 0,
-	0, 1,
-	1, 1,
-	1, 0 
-};
-
-GLuint indices[] = {
-	0, 2, 1,
-	0, 3, 2 
-};
-
 using namespace LampEngine;
 
 int main() {
@@ -26,29 +6,32 @@ int main() {
 	Window window("LampEngine.SandBox", 1200, 720);
 	Core::ImGui_Init(window);
 
-	Camera camera(glm::vec3{0.0f, 0.0f, -5.0f});
+	Camera camera(glm::vec3{0.0f, 1.0f, 5.0f});
 	window.camera = &camera;
 
-	// Object1
-	Texture texture("Res/Textures/Texture.png", true);
-	Shader shader("Res/Shaders/default_shader.vertex", "Res/Shaders/default_shader.fragment");
-	TextureModel model = Loader::LoadTextureModel(texture, vertices, sizeof(vertices), indices, sizeof(indices), uv, sizeof(uv));
-	Entity entity(model);
+	Model model = Loader::LoadOBJModel("Res/Meshes/WoodTest.obj");
+	model.rotation.y = 90;
 
-	shader.Uniform1i("textureSampler", 0);
-	texture.free();
+	glm::vec3 lightPosition(0.0f, 0.4f, 0.0f);
+	float lightColor[3] = { 1.0f, 1.0f, 1.0f };
 
 	while (window.isRunning()) {
-		Renderer::Clear();
+		window.clear();;
 		Core::ImGui_NewFrame();
 
-		// Object1
-		shader.bind();
-		Renderer::Render(entity, shader);
+		model.lightColor = glm::vec3(lightColor[0], lightColor[1], lightColor[2]);
+		model.lightPosition = lightPosition;
+
+		camera.input();
+		model.render();
+
+		ImGui::Begin("ImGui Window");
+		ImGui::ColorEdit3("LightColor", lightColor);
+		ImGui::End();
 
 		Core::ImGui_Render();
 		window.update();
 	}
 
-	return 0;
+	model.destroy();
 }

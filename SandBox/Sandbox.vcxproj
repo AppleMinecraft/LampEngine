@@ -102,8 +102,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
-    <None Include="Res\Shaders\default_shader.fragment" />
-    <None Include="Res\Shaders\default_shader.vertex" />
+    <None Include="Res\Shaders\mesh_shader.fragment" />
+    <None Include="Res\Shaders\mesh_shader.vertex" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Res\Textures\Planks037A_1K_Color.jpg" />
+    <Image Include="Res\Textures\Planks037A_1K_NormalGL.jpg" />
+    <Image Include="Res\Textures\Planks037A_1K_Roughness.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
