@@ -8,9 +8,11 @@ namespace LampEngine {
 		rotation(0.0f),
 		scale(1.0f)
 	{
-		LOGinfo("Loading textures for meshes.");
+		LOGinfo("Loading shaders and textures for meshes.");
+		Shader shader("Res/Shaders/mesh_shader.vertex", "Res/Shaders/mesh_shader.fragment");
 		for (Mesh* mesh : m_Meshes) {
 			mesh->loadTextures();
+			mesh->loadShader(shader);
 		}
 	}
 	void Model::render() {

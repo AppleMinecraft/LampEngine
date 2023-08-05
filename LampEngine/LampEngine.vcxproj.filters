@@ -900,7 +900,6 @@
     <ClInclude Include="Vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="Vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="Src\LampEngine.h" />
-    <ClInclude Include="Src\Resources\Mesh.h" />
     <ClInclude Include="Src\Utils\_OBJLoader.h" />
     <ClInclude Include="Src\Buffers\EBO.h" />
     <ClInclude Include="Src\Buffers\VAO.h" />
@@ -910,6 +909,7 @@
     <ClInclude Include="Src\Renderable\Model.h" />
     <ClInclude Include="Src\Utils\StringUtils.h" />
     <ClInclude Include="Src\Resources\Material.h" />
+    <ClInclude Include="Src\Resources\Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Core.cpp">

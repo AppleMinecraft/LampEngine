@@ -104,8 +104,8 @@
     <ClInclude Include="Src\Resources\Image.h" />
     <ClInclude Include="Src\Buffers\EBO.h" />
     <ClInclude Include="Src\Resources\Material.h" />
-    <ClInclude Include="Src\Utils\_OBJLoader.h" />
     <ClInclude Include="Src\Resources\Mesh.h" />
+    <ClInclude Include="Src\Utils\_OBJLoader.h" />
     <ClInclude Include="Src\Core\Camera.h" />
     <ClInclude Include="Src\Core\Shader.h" />
     <ClInclude Include="Src\Resources\Texture.h" />

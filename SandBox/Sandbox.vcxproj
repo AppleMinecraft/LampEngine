@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
+    <None Include="Res\Meshes\WoodTest.mtl" />
     <None Include="Res\Shaders\mesh_shader.fragment" />
     <None Include="Res\Shaders\mesh_shader.vertex" />
   </ItemGroup>

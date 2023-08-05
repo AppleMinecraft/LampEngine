@@ -610,49 +610,116 @@ namespace LampEngine
 			}
 			// Specular Exponent
 			if (firstToken == "Ns")
-			{
 				tempMaterial.roughness = std::clamp(std::stof(StringUtils::GetTail(curline)), 0.0f, 1.0f);
-			}
+
+
 			// Diffuse Color Map
 			if (firstToken == "map_Kd") {
+				// Path to the Texture
 				std::string texPath = StringUtils::GetTail(curline);
+				// Check if Texture is already loaded.
+				Texture* texture = isTextureAlreadyLoaded("BASE", texPath);
+				if (texture != nullptr) {
+					tempMaterial.baseTexture = texture;
+				} 
+				// If Texture is not loaded, then load it
+				std::string texFile;
+				// If texture exists at texPath
 				if (FileUtils::FileExists(texPath))
-					tempMaterial.baseTexture = texPath;
+					texFile = texPath;
+				// If texture does not exists at texPath we check at the path where the material is stored.
 				else {
 					size_t lastPosition = path.find_last_of("/");
 					if (lastPosition != std::string::npos) {
 						std::string newPath = path.substr(0, lastPosition + 1) + texPath;
+						// Safety check if no texture exists
 						if (FileUtils::FileExists(newPath))
-							tempMaterial.baseTexture = newPath;
+							texFile = newPath;
 					}
 				}
+
+				// Load the texture
+				if (texFile != "") {
+					Texture* newTexture = new Texture(Image(texFile), _TEXTURE_BASE_SLOT);
+					const char* string = texFile.c_str();
+					newTexture->type = "BASE";
+					newTexture->path = string;
+					tempMaterial.baseTexture = newTexture;
+					loadedTextures.push_back(newTexture);
+				}
 			}
+
+
 			// Specular Hightlight Map
 			if (firstToken == "map_Ns") {
+				// Path to the Texture
 				std::string texPath = StringUtils::GetTail(curline);
+				// Check if Texture is already loaded.
+				Texture* texture = isTextureAlreadyLoaded("ROUGHNESS", texPath);
+				if (texture != nullptr) {
+					tempMaterial.baseTexture = texture;
+				}
+				// If Texture is not loaded, then load it
+				std::string texFile;
+				// If texture exists at texPath
 				if (FileUtils::FileExists(texPath))
-					tempMaterial.roughnessTexture = texPath;
+					texFile = texPath;
+				// If texture does not exists at texPath we check at the path where the material is stored.
 				else {
 					size_t lastPosition = path.find_last_of("/");
 					if (lastPosition != std::string::npos) {
 						std::string newPath = path.substr(0, lastPosition + 1) + texPath;
+						// Safety check if no texture exists
 						if (FileUtils::FileExists(newPath))
-							tempMaterial.roughnessTexture = newPath;
+							texFile = newPath;
 					}
 				}
+
+				// Load the texture
+				if (texFile != "") {
+					Texture* newTexture = new Texture(Image(texFile), _TEXTURE_ROUGHNESS_SLOT);
+					const char* string = texFile.c_str();
+					newTexture->type = "ROUGHNESS";
+					newTexture->path = string;
+					tempMaterial.roughnessTexture = newTexture;
+					loadedTextures.push_back(newTexture);
+				}
 			}
+
+
 			// Bump Map
 			if (firstToken == "map_Bump" || firstToken == "map_bump" || firstToken == "bump") {
+				// Path to the Texture
 				std::string texPath = StringUtils::GetTail(curline);
+				// Check if Texture is already loaded.
+				Texture* texture = isTextureAlreadyLoaded("NORMALMAP", texPath);
+				if (texture != nullptr) {
+					tempMaterial.baseTexture = texture;
+				}
+				// If Texture is not loaded, then load it
+				std::string texFile;
+				// If texture exists at texPath
 				if (FileUtils::FileExists(texPath))
-					tempMaterial.normalMapTexture = texPath;
+					texFile = texPath;
+				// If texture does not exists at texPath we check at the path where the material is stored.
 				else {
 					size_t lastPosition = path.find_last_of("/");
 					if (lastPosition != std::string::npos) {
 						std::string newPath = path.substr(0, lastPosition + 1) + texPath;
+						// Safety check if no texture exists
 						if (FileUtils::FileExists(newPath))
-							tempMaterial.normalMapTexture = newPath;
+							texFile = newPath;
 					}
+				}
+
+				// Load the texture
+				if (texFile != "") {
+					Texture* newTexture = new Texture(Image(texFile), _TEXTURE_NORMALMAP_SLOT);
+					const char* string = texFile.c_str();
+					newTexture->type = "NORMALMAP";
+					newTexture->path = string;
+					tempMaterial.normalMapTexture = newTexture;
+					loadedTextures.push_back(newTexture);
 				}
 			}
 		}
@@ -662,5 +729,15 @@ namespace LampEngine
 			return false;
 		else
 			return true;
+	}
+	Texture* OBJLoader::isTextureAlreadyLoaded(std::string type, std::string path) {
+		for (Texture* texture : loadedTextures) {
+			if (texture->type == type) {
+				if (texture->path == path) {
+					return texture;
+				}
+			}
+		}
+		return nullptr;
 	}
 }

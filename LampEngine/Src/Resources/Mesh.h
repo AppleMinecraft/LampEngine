@@ -9,6 +9,10 @@
 #include "Resources/Material.h"
 #include "Renderable/Renderable.h"
 
+#define _TEXTURE_BASE_SLOT 0
+#define _TEXTURE_ROUGHNESS_SLOT 1
+#define _TEXTURE_NORMALMAP_SLOT 2
+
 namespace LampEngine {
 
 	//The Mesh class holds vertex positions, normals, UVs, and indices, and is responsible for generating all the necessary shaders and buffers.
@@ -17,16 +21,20 @@ namespace LampEngine {
 
 		/*
 		* The constructor creates shaders buffers and stores vertices and indices.
-		* NOTE: Call the method loadTextures() after the constructor. 
+		* NOTE: Call the method loadTextures() after the constructor.
+		* NOTE: Call the method loadShader(Shader) after the constructor.
 		* @param name: Name of the mesh.
 		* @param vertices: Vector of vertex(Positions, Normals, UVs) to be stored.
 		* @param indices: Vector of indices to be stored.
 		*/
 		Mesh(std::string name, std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
 
-		// This method loads all the essential textures from the material, including the base texture, roughness texture, and normal map texture.
-		// This method must be called once after the constructor or if any texture changes in the material.
-		void loadTextures(); 
+		// This method loads a white texture if a texture is null in material, including the base texture, roughness texture, and normal map texture.
+		// This method must be called once after the constructor.
+		void loadTextures();
+		// This method loads the shader provided the the mesh.
+		// This method must be called once after the constructor.
+		void loadShader(Shader shader);
 
 		// This method renders the mesh.
 		void render() override;
@@ -46,7 +54,6 @@ namespace LampEngine {
 		// The material assigned the the meah
 		Material material;
 	private:
-		Texture m_BaseTexture, m_RoughnessTexture;
 		VAO m_VAO;
 		Shader m_Shader;
 	};
