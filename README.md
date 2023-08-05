@@ -7,6 +7,3 @@
 - ## DEAR IMGUI DOCKING
 - ## STB IMAGE
 - ## SPD LOG
-# Compatibility
-- ## Window Management
-- ## 
