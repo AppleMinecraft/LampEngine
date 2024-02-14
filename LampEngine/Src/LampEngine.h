@@ -8,6 +8,7 @@
 #include "Core/Shader.h"
 #include "Core/Loader.h"
 #include "Core/Camera.h"
+#include "Core/Input.h"
 #include "Renderable/Renderable.h"
 #include "Renderable/Model.h"
 #include "Resources/Image.h"

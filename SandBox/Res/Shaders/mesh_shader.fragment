@@ -27,18 +27,12 @@ uniform sampler2D roughnessTexture;
 
 void main() { 
     // ambient lighting
-	float ambient = 0.20f;
+	float ambient = 0.1f;
 
     // diffuse lighting
     vec3 normal = normalize(NORMAL);
 	vec3 lightDirection = normalize(lightPos - POSITION);
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 
-    // specular lighting
-	vec3 viewDirection = normalize(cameraPos - POSITION);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	float specular = specAmount * (1 - roughness);
-
-    FragColor = vec4((texture(baseTexture, UV).rgb * (diffuse + ambient) + texture(roughnessTexture, UV).r * specular) * lightColor, 1.0f);
+    FragColor = vec4( texture(baseTexture, UV).rgb * baseColor * COLOR * (diffuse * lightColor) + vec3(ambient * COLOR), 1.0f);
 }

@@ -102,11 +102,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
-    <None Include="Res\Meshes\WoodTest.mtl" />
     <None Include="Res\Shaders\mesh_shader.fragment" />
     <None Include="Res\Shaders\mesh_shader.vertex" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Res\Textures\PavingStones136_1K-JPG_Color.jpg" />
+    <Image Include="Res\Textures\PavingStones136_1K-JPG_NormalGL.jpg" />
+    <Image Include="Res\Textures\PavingStones136_1K-JPG_Roughness.jpg" />
     <Image Include="Res\Textures\Planks037A_1K_Color.jpg" />
     <Image Include="Res\Textures\Planks037A_1K_NormalGL.jpg" />
     <Image Include="Res\Textures\Planks037A_1K_Roughness.jpg" />

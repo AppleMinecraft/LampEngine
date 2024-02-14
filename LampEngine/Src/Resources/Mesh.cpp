@@ -71,4 +71,12 @@ namespace LampEngine {
 	VAO& Mesh::getVAO() {
 		return m_VAO;
 	}
+	Mesh* Mesh::CreateMesh(std::string name, std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Material& material) {
+		Mesh* mesh = new Mesh(name, vertices, indices);
+		mesh->material = material;
+		Shader shader("Res/Shaders/mesh_shader.vertex", "Res/Shaders/mesh_shader.fragment");
+		mesh->loadTextures();
+		mesh->loadShader(shader);
+		return mesh;
+	}
 }

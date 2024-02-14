@@ -20,7 +20,7 @@ namespace LampEngine {
 	public:
 
 		/*
-		* The constructor creates shaders buffers and stores vertices and indices.
+		* The constructor creates buffers and stores vertices and indices.
 		* NOTE: Call the method loadTextures() after the constructor.
 		* NOTE: Call the method loadShader(Shader) after the constructor.
 		* @param name: Name of the mesh.
@@ -44,6 +44,9 @@ namespace LampEngine {
 
 		// Returns the ID of Mesh VAO buffer.
 		VAO& getVAO() override;
+
+		// Calls the mesh constructor and loads shaders and textures.
+		static Mesh* CreateMesh(std::string name, std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Material& material);
 	public:
 		// The name of the mesh.
 		std::string name;

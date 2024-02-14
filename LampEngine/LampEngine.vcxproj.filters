@@ -910,6 +910,7 @@
     <ClInclude Include="Src\Utils\StringUtils.h" />
     <ClInclude Include="Src\Resources\Material.h" />
     <ClInclude Include="Src\Resources\Mesh.h" />
+    <ClInclude Include="Src\Core\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Core.cpp">
@@ -947,6 +948,7 @@
     <ClCompile Include="Src\Resources\Mesh.cpp" />
     <ClCompile Include="Src\Utils\StringUtils.cpp" />
     <ClCompile Include="Src\Renderable\Renderable.cpp" />
+    <ClCompile Include="Src\Core\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
