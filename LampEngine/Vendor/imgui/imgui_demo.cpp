@@ -5629,7 +5629,7 @@ static void ShowDemoWindowTables()
                             }
                             else
                             {
-                                selection.clear();
+                                selection.prepare();
                                 selection.push_back(item->ID);
                             }
                         }
@@ -6806,7 +6806,7 @@ struct ExampleAppConsole
     {
         for (int i = 0; i < Items.Size; i++)
             free(Items[i]);
-        Items.clear();
+        Items.prepare();
     }
 
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
@@ -7142,8 +7142,8 @@ struct ExampleAppLog
 
     void    Clear()
     {
-        Buf.clear();
-        LineOffsets.clear();
+        Buf.prepare();
+        LineOffsets.prepare();
         LineOffsets.push_back(0);
     }
 
@@ -7178,7 +7178,7 @@ struct ExampleAppLog
         if (ImGui::Button("Options"))
             ImGui::OpenPopup("Options");
         ImGui::SameLine();
-        bool clear = ImGui::Button("Clear");
+        bool prepare = ImGui::Button("Clear");
         ImGui::SameLine();
         bool copy = ImGui::Button("Copy");
         ImGui::SameLine();
@@ -7188,7 +7188,7 @@ struct ExampleAppLog
 
         if (ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar))
         {
-            if (clear)
+            if (prepare)
                 Clear();
             if (copy)
                 ImGui::LogToClipboard();
@@ -7455,7 +7455,7 @@ static void ShowExampleAppLongText(bool* p_open)
         "Multiple calls to Text(), clipped\0"
         "Multiple calls to Text(), not clipped (slow)\0");
     ImGui::Text("Buffer contents: %d lines, %d bytes", lines, log.size());
-    if (ImGui::Button("Clear")) { log.clear(); lines = 0; }
+    if (ImGui::Button("Clear")) { log.prepare(); lines = 0; }
     ImGui::SameLine();
     if (ImGui::Button("Add 1000 lines"))
     {
@@ -7932,7 +7932,7 @@ static void ShowExampleAppCustomRendering(bool* p_open)
                     points.resize(points.size() - 2);
                 adding_line = false;
                 if (ImGui::MenuItem("Remove one", NULL, false, points.Size > 0)) { points.resize(points.size() - 2); }
-                if (ImGui::MenuItem("Remove all", NULL, false, points.Size > 0)) { points.clear(); }
+                if (ImGui::MenuItem("Remove all", NULL, false, points.Size > 0)) { points.prepare(); }
                 ImGui::EndPopup();
             }
 
@@ -8406,7 +8406,7 @@ void ShowExampleAppDocuments(bool* p_open)
             // Close documents when all are unsaved
             for (int n = 0; n < close_queue.Size; n++)
                 close_queue[n]->DoForceClose();
-            close_queue.clear();
+            close_queue.prepare();
         }
         else
         {
@@ -8433,7 +8433,7 @@ void ShowExampleAppDocuments(bool* p_open)
                             close_queue[n]->DoSave();
                         close_queue[n]->DoForceClose();
                     }
-                    close_queue.clear();
+                    close_queue.prepare();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
@@ -8441,13 +8441,13 @@ void ShowExampleAppDocuments(bool* p_open)
                 {
                     for (int n = 0; n < close_queue.Size; n++)
                         close_queue[n]->DoForceClose();
-                    close_queue.clear();
+                    close_queue.prepare();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel", button_size))
                 {
-                    close_queue.clear();
+                    close_queue.prepare();
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();

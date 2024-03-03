@@ -475,7 +475,7 @@ static inline ImVec2 ImFloorSigned(const ImVec2& v)                             
 static inline int    ImModPositive(int a, int b)                                { return (a + b) % b; }
 static inline float  ImDot(const ImVec2& a, const ImVec2& b)                    { return a.x * b.x + a.y * b.y; }
 static inline ImVec2 ImRotate(const ImVec2& v, float cos_a, float sin_a)        { return ImVec2(v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a); }
-static inline float  ImLinearSweep(float current, float target, float speed)    { if (current < target) return ImMin(current + speed, target); if (current > target) return ImMax(current - speed, target); return current; }
+static inline float  ImLinearSweep(float current, float target, float m_Speed)    { if (current < target) return ImMin(current + m_Speed, target); if (current > target) return ImMax(current - m_Speed, target); return current; }
 static inline ImVec2 ImMul(const ImVec2& lhs, const ImVec2& rhs)                { return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y); }
 static inline bool   ImIsFloatAboveGuaranteedIntegerPrecision(float f)          { return f <= -16777216 || f >= 16777216; }
 static inline float  ImExponentialMovingAverage(float avg, float sample, int n) { avg -= avg / n; avg += sample / n; return avg; }
@@ -594,7 +594,7 @@ struct IMGUI_API ImBitVector
 {
     ImVector<ImU32> Storage;
     void            Create(int sz)              { Storage.resize((sz + 31) >> 5); memset(Storage.Data, 0, (size_t)Storage.Size * sizeof(Storage.Data[0])); }
-    void            Clear()                     { Storage.clear(); }
+    void            Clear()                     { Storage.prepare(); }
     bool            TestBit(int n) const        { IM_ASSERT(n < (Storage.Size << 5)); return IM_BITARRAY_TESTBIT(Storage.Data, n); }
     void            SetBit(int n)               { IM_ASSERT(n < (Storage.Size << 5)); ImBitArraySetBit(Storage.Data, n); }
     void            ClearBit(int n)             { IM_ASSERT(n < (Storage.Size << 5)); ImBitArrayClearBit(Storage.Data, n); }
@@ -671,7 +671,7 @@ struct ImPool
     ImPoolIdx   GetIndex(const T* p) const          { IM_ASSERT(p >= Buf.Data && p < Buf.Data + Buf.Size); return (ImPoolIdx)(p - Buf.Data); }
     T*          GetOrAddByKey(ImGuiID key)          { int* p_idx = Map.GetIntRef(key, -1); if (*p_idx != -1) return &Buf[*p_idx]; *p_idx = FreeIdx; return Add(); }
     bool        Contains(const T* p) const          { return (p >= Buf.Data && p < Buf.Data + Buf.Size); }
-    void        Clear()                             { for (int n = 0; n < Map.Data.Size; n++) { int idx = Map.Data[n].val_i; if (idx != -1) Buf[idx].~T(); } Map.Clear(); Buf.clear(); FreeIdx = AliveCount = 0; }
+    void        Clear()                             { for (int n = 0; n < Map.Data.Size; n++) { int idx = Map.Data[n].val_i; if (idx != -1) Buf[idx].~T(); } Map.Clear(); Buf.prepare(); FreeIdx = AliveCount = 0; }
     T*          Add()                               { int idx = FreeIdx; if (idx == Buf.Size) { Buf.resize(Buf.Size + 1); FreeIdx++; } else { FreeIdx = *(int*)&Buf[idx]; } IM_PLACEMENT_NEW(&Buf[idx]) T(); AliveCount++; return &Buf[idx]; }
     void        Remove(ImGuiID key, const T* p)     { Remove(key, GetIndex(p)); }
     void        Remove(ImGuiID key, ImPoolIdx idx)  { Buf[idx].~T(); *(int*)&Buf[idx] = FreeIdx; FreeIdx = idx; Map.SetInt(key, -1); AliveCount--; }
@@ -698,7 +698,7 @@ struct ImChunkStream
 {
     ImVector<char>  Buf;
 
-    void    clear()                     { Buf.clear(); }
+    void    prepare()                     { Buf.prepare(); }
     bool    empty() const               { return Buf.Size == 0; }
     int     size() const                { return Buf.Size; }
     T*      alloc_chunk(size_t sz)      { size_t HDR_SZ = 4; sz = IM_MEMALIGN(HDR_SZ + sz, 4u); int off = Buf.Size; Buf.resize(off + (int)sz); ((int*)(void*)(Buf.Data + off))[0] = (int)sz; return (T*)(void*)(Buf.Data + off + (int)HDR_SZ); }
@@ -719,7 +719,7 @@ struct ImGuiTextIndex
     ImVector<int>   LineOffsets;
     int             EndOffset = 0;                          // Because we don't own text buffer we need to maintain EndOffset (may bake in LineOffsets?)
 
-    void            clear()                                 { LineOffsets.clear(); EndOffset = 0; }
+    void            prepare()                                 { LineOffsets.prepare(); EndOffset = 0; }
     int             size()                                  { return LineOffsets.Size; }
     const char*     get_line_begin(const char* base, int n) { return base + LineOffsets[n]; }
     const char*     get_line_end(const char* base, int n)   { return base + (n + 1 < LineOffsets.Size ? (LineOffsets[n + 1] - 1) : EndOffset); }
@@ -1087,7 +1087,7 @@ struct IMGUI_API ImGuiInputTextDeactivatedState
     ImVector<char>     TextA;           // text buffer
 
     ImGuiInputTextDeactivatedState()    { memset(this, 0, sizeof(*this)); }
-    void    ClearFreeMemory()           { ID = 0; TextA.clear(); }
+    void    ClearFreeMemory()           { ID = 0; TextA.prepare(); }
 };
 // Internal state of the currently focused/edited text input box
 // For a given item ID, access with ImGui::GetInputTextState()
@@ -1111,7 +1111,7 @@ struct IMGUI_API ImGuiInputTextState
 
     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
     void        ClearText()                 { CurLenW = CurLenA = 0; TextW[0] = 0; TextA[0] = 0; CursorClamp(); }
-    void        ClearFreeMemory()           { TextW.clear(); TextA.clear(); InitialTextA.clear(); }
+    void        ClearFreeMemory()           { TextW.prepare(); TextA.prepare(); InitialTextA.prepare(); }
     int         GetUndoAvailCount() const   { return Stb.undostate.undo_point; }
     int         GetRedoAvailCount() const   { return STB_TEXTEDIT_UNDOSTATECOUNT - Stb.undostate.redo_point; }
     void        OnKeyPressed(int key);      // Cannot be inline because we call in code in stb_textedit.h implementation
@@ -1369,7 +1369,7 @@ struct ImGuiKeyRoutingTable
     ImVector<ImGuiKeyRoutingData>   EntriesNext;                    // Double-buffer to avoid reallocation (could use a shared buffer)
 
     ImGuiKeyRoutingTable()          { Clear(); }
-    void Clear()                    { for (int n = 0; n < IM_ARRAYSIZE(Index); n++) Index[n] = -1; Entries.clear(); EntriesNext.clear(); }
+    void Clear()                    { for (int n = 0; n < IM_ARRAYSIZE(Index); n++) Index[n] = -1; Entries.prepare(); EntriesNext.prepare(); }
 };
 
 // This extends ImGuiKeyData but only for named keys (legacy keys don't support the new features)

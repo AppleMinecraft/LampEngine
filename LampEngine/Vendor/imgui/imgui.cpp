@@ -1384,7 +1384,7 @@ void ImGuiIO::ClearEventsQueue()
 {
     IM_ASSERT(Ctx != NULL);
     ImGuiContext& g = *Ctx;
-    g.InputEventsQueue.clear();
+    g.InputEventsQueue.prepare();
 }
 
 // Clear current keyboard/mouse/gamepad state + current frame text input buffer. Equivalent to releasing all keys/buttons.
@@ -3672,7 +3672,7 @@ void ImGui::Shutdown()
         IM_DELETE(g.IO.Fonts);
     }
     g.IO.Fonts = NULL;
-    g.DrawListSharedData.TempBuffer.clear();
+    g.DrawListSharedData.TempBuffer.prepare();
 
     // Cleanup of other data are conditional on actually having initialized Dear ImGui.
     if (!g.Initialized)
@@ -3692,10 +3692,10 @@ void ImGui::Shutdown()
 
     // Clear everything else
     g.Windows.clear_delete();
-    g.WindowsFocusOrder.clear();
-    g.WindowsTempSortBuffer.clear();
+    g.WindowsFocusOrder.prepare();
+    g.WindowsTempSortBuffer.prepare();
     g.CurrentWindow = NULL;
-    g.CurrentWindowStack.clear();
+    g.CurrentWindowStack.prepare();
     g.WindowsById.Clear();
     g.NavWindow = NULL;
     g.HoveredWindow = g.HoveredWindowUnderMovingWindow = NULL;
@@ -3704,32 +3704,32 @@ void ImGui::Shutdown()
 
     g.KeysRoutingTable.Clear();
 
-    g.ColorStack.clear();
-    g.StyleVarStack.clear();
-    g.FontStack.clear();
-    g.OpenPopupStack.clear();
-    g.BeginPopupStack.clear();
+    g.ColorStack.prepare();
+    g.StyleVarStack.prepare();
+    g.FontStack.prepare();
+    g.OpenPopupStack.prepare();
+    g.BeginPopupStack.prepare();
 
     g.CurrentViewport = g.MouseViewport = g.MouseLastHoveredViewport = NULL;
     g.Viewports.clear_delete();
 
     g.TabBars.Clear();
-    g.CurrentTabBarStack.clear();
-    g.ShrinkWidthBuffer.clear();
+    g.CurrentTabBarStack.prepare();
+    g.ShrinkWidthBuffer.prepare();
 
     g.ClipperTempData.clear_destruct();
 
     g.Tables.Clear();
     g.TablesTempData.clear_destruct();
-    g.DrawChannelsTempMergeBuffer.clear();
+    g.DrawChannelsTempMergeBuffer.prepare();
 
-    g.ClipboardHandlerData.clear();
-    g.MenusIdSubmittedThisFrame.clear();
+    g.ClipboardHandlerData.prepare();
+    g.MenusIdSubmittedThisFrame.prepare();
     g.InputTextState.ClearFreeMemory();
     g.InputTextDeactivatedState.ClearFreeMemory();
 
-    g.SettingsWindows.clear();
-    g.SettingsHandlers.clear();
+    g.SettingsWindows.prepare();
+    g.SettingsHandlers.prepare();
 
     if (g.LogFile)
     {
@@ -3739,9 +3739,9 @@ void ImGui::Shutdown()
             ImFileClose(g.LogFile);
         g.LogFile = NULL;
     }
-    g.LogBuffer.clear();
-    g.DebugLogBuf.clear();
-    g.DebugLogIndex.clear();
+    g.LogBuffer.prepare();
+    g.DebugLogBuf.prepare();
+    g.DebugLogIndex.prepare();
 
     g.Initialized = false;
 }
@@ -3874,8 +3874,8 @@ static void SetCurrentWindow(ImGuiWindow* window)
 void ImGui::GcCompactTransientMiscBuffers()
 {
     ImGuiContext& g = *GImGui;
-    g.ItemFlagsStack.clear();
-    g.GroupStack.clear();
+    g.ItemFlagsStack.prepare();
+    g.GroupStack.prepare();
     TableGcCompactSettings();
 }
 
@@ -3888,11 +3888,11 @@ void ImGui::GcCompactTransientWindowBuffers(ImGuiWindow* window)
     window->MemoryCompacted = true;
     window->MemoryDrawListIdxCapacity = window->DrawList->IdxBuffer.Capacity;
     window->MemoryDrawListVtxCapacity = window->DrawList->VtxBuffer.Capacity;
-    window->IDStack.clear();
+    window->IDStack.prepare();
     window->DrawList->_ClearFreeMemory();
-    window->DC.ChildWindows.clear();
-    window->DC.ItemWidthStack.clear();
-    window->DC.TextWrapPosStack.clear();
+    window->DC.ChildWindows.prepare();
+    window->DC.ItemWidthStack.prepare();
+    window->DC.TextWrapPosStack.prepare();
 }
 
 void ImGui::GcAwakeTransientWindowBuffers(ImGuiWindow* window)
@@ -12972,7 +12972,7 @@ void ImGui::ClearDragDrop()
     g.DragDropAcceptIdCurrRectSurface = FLT_MAX;
     g.DragDropAcceptFrameCount = -1;
 
-    g.DragDropPayloadBufHeap.clear();
+    g.DragDropPayloadBufHeap.prepare();
     memset(&g.DragDropPayloadBufLocal, 0, sizeof(g.DragDropPayloadBufLocal));
 }
 
@@ -13493,7 +13493,7 @@ void ImGui::LogFinish()
     g.LogEnabled = false;
     g.LogType = ImGuiLogType_None;
     g.LogFile = NULL;
-    g.LogBuffer.clear();
+    g.LogBuffer.prepare();
 }
 
 // Helper to display logging buttons
@@ -13616,7 +13616,7 @@ ImGuiSettingsHandler* ImGui::FindSettingsHandler(const char* type_name)
 void ImGui::ClearIniSettings()
 {
     ImGuiContext& g = *GImGui;
-    g.SettingsIniData.clear();
+    g.SettingsIniData.prepare();
     for (int handler_n = 0; handler_n < g.SettingsHandlers.Size; handler_n++)
         if (g.SettingsHandlers[handler_n].ClearAllFn)
             g.SettingsHandlers[handler_n].ClearAllFn(&g, &g.SettingsHandlers[handler_n]);
@@ -13803,7 +13803,7 @@ static void WindowSettingsHandler_ClearAll(ImGuiContext* ctx, ImGuiSettingsHandl
     ImGuiContext& g = *ctx;
     for (int i = 0; i != g.Windows.Size; i++)
         g.Windows[i]->SettingsOffset = -1;
-    g.SettingsWindows.clear();
+    g.SettingsWindows.prepare();
 }
 
 static void* WindowSettingsHandler_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
@@ -16006,7 +16006,7 @@ static void ImGui::DockNodeMoveWindows(ImGuiDockNode* dst_node, ImGuiDockNode* s
         window->DockIsActive = false;
         DockNodeAddWindow(dst_node, window, !move_tab_bar);
     }
-    src_node->Windows.clear();
+    src_node->Windows.prepare();
 
     if (!move_tab_bar && src_node->TabBar)
     {
@@ -18070,7 +18070,7 @@ void ImGui::DockBuilderRemoveNodeChildNodes(ImGuiID root_id)
     if (root_id == 0)
     {
         dc->Nodes.Clear();
-        dc->Requests.clear();
+        dc->Requests.prepare();
     }
     else if (has_central_node)
     {
@@ -18190,7 +18190,7 @@ void ImGui::DockBuilderCopyNode(ImGuiID src_node_id, ImGuiID dst_node_id, ImVect
     ImGuiDockNode* src_node = DockContextFindNodeByID(ctx, src_node_id);
     IM_ASSERT(src_node != NULL);
 
-    out_node_remap_pairs->clear();
+    out_node_remap_pairs->prepare();
     DockBuilderCopyNodeRec(src_node, dst_node_id, out_node_remap_pairs);
 
     IM_ASSERT((out_node_remap_pairs->Size % 2) == 0);
@@ -18674,7 +18674,7 @@ static ImGuiDockNodeSettings* ImGui::DockSettingsFindNodeSettings(ImGuiContext* 
 static void ImGui::DockSettingsHandler_ClearAll(ImGuiContext* ctx, ImGuiSettingsHandler*)
 {
     ImGuiDockContext* dc  = &ctx->DockContext;
-    dc->NodesSettings.clear();
+    dc->NodesSettings.prepare();
     DockContextClearNodes(ctx, 0, true);
 }
 
@@ -18853,7 +18853,7 @@ static void ImGui::DockSettingsHandler_WriteAll(ImGuiContext* ctx, ImGuiSettings
 static const char* GetClipboardTextFn_DefaultImpl(void* user_data_ctx)
 {
     ImGuiContext& g = *(ImGuiContext*)user_data_ctx;
-    g.ClipboardHandlerData.clear();
+    g.ClipboardHandlerData.prepare();
     if (!::OpenClipboard(NULL))
         return NULL;
     HANDLE wbuf_handle = ::GetClipboardData(CF_UNICODETEXT);
@@ -20390,8 +20390,8 @@ void ImGui::ShowDebugLogWindow(bool* p_open)
 
     if (SmallButton("Clear"))
     {
-        g.DebugLogBuf.clear();
-        g.DebugLogIndex.clear();
+        g.DebugLogBuf.prepare();
+        g.DebugLogIndex.prepare();
     }
     SameLine();
     if (SmallButton("Copy"))

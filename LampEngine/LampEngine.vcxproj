@@ -99,6 +99,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Light.h" />
     <ClInclude Include="Src\Core\Input.h" />
     <ClInclude Include="Src\Renderable\Model.h" />
     <ClInclude Include="Src\Renderable\Renderable.h" />
@@ -106,6 +107,7 @@
     <ClInclude Include="Src\Buffers\EBO.h" />
     <ClInclude Include="Src\Resources\Material.h" />
     <ClInclude Include="Src\Resources\Mesh.h" />
+    <ClInclude Include="Src\Utils\Transform.h" />
     <ClInclude Include="Src\Utils\_OBJLoader.h" />
     <ClInclude Include="Src\Core\Camera.h" />
     <ClInclude Include="Src\Core\Shader.h" />
@@ -412,6 +414,7 @@
     <ClInclude Include="Vendor\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Light.cpp" />
     <ClCompile Include="Src\Core\Input.cpp" />
     <ClCompile Include="Src\Renderable\Model.cpp" />
     <ClCompile Include="Src\Renderable\Renderable.cpp" />

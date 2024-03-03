@@ -1,7 +1,9 @@
 #include "Input.h"
 
 #include <GLFW/glfw3.h>
-#include <Core/Window.h>
+
+#include "Core/Window.h"
+#include "Core/Logger.h"
 
 namespace LampEngine {
 	Key Input::GetKey(int key) {
@@ -34,6 +36,8 @@ namespace LampEngine {
 		SetMousePosition(glm::vec2(x, y));
 	}
 	void Input::SetMouseMode(MouseMode mode) {
+		if (mode == MouseMode::HIDDEN)
+			LOGwarn("MouseMode set to Hidden but due to a bug it does not hide the cursor, Use MouseMode::DISABLED instead");
 		glfwSetInputMode(Window::GetCurrentWindowInstance()->getNativeWindow(), GLFW_CURSOR, (int)mode);
 	}
 }

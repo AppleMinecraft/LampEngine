@@ -3,49 +3,60 @@
 #include "Core/Input.h"
 
 namespace LampEngine {
-	Camera::Camera(glm::vec3 position, glm::vec3 rotation):
-		position(position),
-		rotation(rotation)
-	{
+	Camera::Camera():
+		m_Orientation(1.0f, 0.0f, 0.0f) { }
+
+	Camera::Camera(Transform3D transform) :
+		transform(transform),
+		m_Orientation(1.0f, 0.0f, 0.0f) { }
+
+
+	glm::vec3 Camera::getOrientation() {
+		return m_Orientation;
 	}
 
-	void Camera::matrix(Renderable& renderable) {
+	void Camera::_matrix(Renderable& renderable) {
+		// Bind the shader to set the uniform varibles
 		Shader& shader = renderable.getShader();
 		shader.bind();
 
-		glm::mat4 model = glm::mat4(1.0f);
+		// Construction the Matrices
 		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
+		// Getting Window Size for Projection Matrix
 		glm::vec2 windowSize = Window::GetCurrentWindowInstance()->getWindowSize();
 
 		// ModelMatrix
-		model = glm::translate(model, renderable.position);
-		applyRotation(model, renderable.rotation);
-		model = glm::scale(model, renderable.scale);
-		// ViewMatrix
-		view = glm::lookAt(position, position + orientation, UP);
-		// ProjectionMatrix
-		proj = glm::perspective(glm::radians(FOV), (float)windowSize.x / windowSize.y, nearPlane , farPlane);
+		model = glm::translate(model, renderable.transform.position);
+		applyRotation(model, renderable.transform.rotation);
+		model = glm::scale(model, renderable.transform.scale);
 
+		// ViewMatrix
+		view = glm::lookAt(transform.position, transform.position + m_Orientation, UP);
+		view = glm::rotate(view, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// ProjectionMatrix
+		if (windowSize.x != 0.0f && windowSize.y != 0.0)
+			proj = glm::perspective(glm::radians(FOV), (float)windowSize.x / windowSize.y, nearPlane , farPlane);
+
+		// Setting the matrices in the shader
 		shader.Uniform4x4mat("model", model);
 		shader.Uniform4x4mat("view", view);
 		shader.Uniform4x4mat("proj", proj);
 	}
-	glm::vec3 Camera::getCameraMoveDirection() {
-		//view = glm::lookAt(position, position + Orientation, Up);
-		float pitch = glm::radians(rotation.x);
-		float yaw = glm::radians(rotation.y);
 
-		// NOTE: might not be correct way to do i am not good at math
-		glm::vec3 viewDirection(
-		    sin(yaw) * cos(pitch),
-			sin(pitch),
-			cos(yaw) * cos(pitch)
-		);
-		return glm::normalize(viewDirection);
+	void Camera::update() {
+		// Calculate orientation
+		glm::vec3 front;
+		front.x = cos(glm::radians(transform.rotation.y)) * cos(glm::radians(transform.rotation.x));
+		front.y = sin(glm::radians(transform.rotation.x));
+		front.z = sin(glm::radians(transform.rotation.y)) * cos(glm::radians(transform.rotation.x));
+		m_Orientation = glm::normalize(front);
 	}
-	void Camera::applyRotation(glm::mat4& matrix, glm::vec3 rotation)
-	{
+	
+	void Camera::applyRotation(glm::mat4& matrix, glm::vec3 rotation) {
+		// Rotation Constants
 		const glm::vec3 ROTATION_X = glm::vec3(-1.0f,  0.0f,  0.0f);
 		const glm::vec3 ROTATION_Y = glm::vec3( 0.0f, -1.0f,  0.0f);
 		const glm::vec3 ROTATION_Z = glm::vec3( 1.0f,  0.0f,  1.0f);
@@ -55,78 +66,88 @@ namespace LampEngine {
 		matrix = glm::rotate(matrix, glm::radians(rotation.z), ROTATION_Z);
 	}
 
-	void Camera::input() {
+
+	void FreeCamCamera::update() {
+		Camera::update();
+
 		Window* defaultWindow = Window::GetCurrentWindowInstance();
 		GLFWwindow* window = defaultWindow->getNativeWindow();
+
 		int width = defaultWindow->getWindowSize().x;
 		int height = defaultWindow->getWindowSize().y;
 
-		if (Input::IsKeyPressed(GLFW_KEY_W))
-			position += speed * orientation;
+		// Get the input and move the Camera
+		{
+			// Move Forward/Backward/Left/Right
+			if (Input::IsKeyPressed(GLFW_KEY_W))
+				transform.position += m_Speed * m_Orientation;
+			if (Input::IsKeyPressed(GLFW_KEY_A))
+				transform.position += m_Speed * -glm::normalize(glm::cross(m_Orientation, UP));
+			if (Input::IsKeyPressed(GLFW_KEY_S))
+				transform.position += m_Speed * -m_Orientation;
+			if (Input::IsKeyPressed(GLFW_KEY_D))
+				transform.position += m_Speed * glm::normalize(glm::cross(m_Orientation, UP));
 
-		if (Input::IsKeyPressed(GLFW_KEY_A))
-			position += speed * -glm::normalize(glm::cross(orientation, UP));
+			// Move Up/Down
+			if (Input::IsKeyPressed(GLFW_KEY_E))
+				transform.position += m_Speed * UP;
+			if (Input::IsKeyPressed(GLFW_KEY_Q))
+				transform.position += m_Speed * -UP;
 
-		if (Input::IsKeyPressed(GLFW_KEY_S))
-			position += speed * -orientation;
-
-		if (Input::IsKeyPressed(GLFW_KEY_D))
-			position += speed * glm::normalize(glm::cross(orientation, UP));
-
-		if (Input::IsKeyPressed(GLFW_KEY_E))
-			position += speed * UP;
-		
-		if (Input::IsKeyPressed(GLFW_KEY_Q))
-			position += speed * -UP;
-		
-		if (Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
-			speed = 0.05f;
-		
-		else if (Input::IsKeyReleased(GLFW_KEY_LEFT_SHIFT))
-			speed = 0.01f;
-		
-		if (Input::IsKeyPressed(GLFW_KEY_F8))
-			exit(0);
+			// Sprint
+			if (Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
+				m_Speed = sprintSpeed;
+			else if (Input::IsKeyReleased(GLFW_KEY_LEFT_SHIFT))
+				m_Speed = moveSpeed;
+		}
 
 
-		// Handles mouse inputs
+		// Rotate the Camera by Mouse
 		if (Input::IsMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-			// Hides mouse cursor
-			Input::SetMouseMode(MouseMode::HIDDEN);
 
-			// Prevents camera from jumping on the first click
-			if (firstClick) {
-				Input::SetMousePosition(width / 2, height / 2 );
-				firstClick = false;
+			// Hides mouse cursor
+			Input::SetMouseMode(MouseMode::DISABLED);
+
+			// Prevents Camera from Jumping on the First Click
+			if (m_FirstClick) {
+				Input::SetMousePosition(width / 2.0f, height / 2.0f);
+				m_FirstClick = false;
 			}
 
-			// Stores the coordinates of the cursor
-			glm::vec2 pos = Input::GetMousePosition();
+			// Get current mouse position
+			glm::vec2 currentPos = Input::GetMousePosition();
 
-			// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-			// and then "transforms" them into degrees 
-			float rotX = 100.0f * (float)(pos.y - (height / 2)) / height;
-			float rotY = 100.0f * (float)(pos.x - (width / 2)) / width;
+			// Calculate the offset from the center of the window
+			float xOffset = currentPos.x - (width / 2.0f);
+			float yOffset = (height / 2.0f) - currentPos.y; // Reversed since y-coordinates go from bottom to top
 
-			// Calculates upcoming vertical change in the Orientation
-			glm::vec3 newOrientation = glm::rotate(orientation, glm::radians(-rotX), glm::normalize(glm::cross(orientation, UP)));
+			// Apply sensitivity to the offset
+			xOffset *= mouseSensitivity;
+			yOffset *= mouseSensitivity;
 
-			// Decides whether or not the next vertical Orientation is legal or not
-			if (abs(glm::angle(newOrientation, UP) - glm::radians(90.0f)) <= glm::radians(85.0f))
-				orientation = newOrientation;
+			// Update the rotation angles
+			transform.rotation.x += yOffset;
+			transform.rotation.y += xOffset;
 
-			// Rotates the Orientation left and right
-			orientation = glm::rotate(orientation, glm::radians(-rotY), UP);
+			// Clamp vertical rotation to prevent flipping
+			if (transform.rotation.x > 89.0f)
+				transform.rotation.x = 89.0f;
+			if (transform.rotation.x < -89.0f)
+				transform.rotation.x = -89.0f;
 
 			// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
-			Input::SetMousePosition(width / 2, height / 2);
-		}
-		else if (Input::IsMouseButtonReleased(GLFW_MOUSE_BUTTON_RIGHT)) {
+			Input::SetMousePosition(width / 2.0f, height / 2.0f);
+
+		} else if (Input::IsMouseButtonReleased(GLFW_MOUSE_BUTTON_RIGHT)) {
 			// Unhides cursor since camera is not looking around anymore
 			Input::SetMouseMode(MouseMode::NORMAL);
-
 			// Makes sure the next time the camera looks around it doesn't jump
-			firstClick = true;
+			m_FirstClick = true;
 		}
 	}
+
+	FreeCamCamera::FreeCamCamera(Transform3D transform) :
+		Camera(transform) { }
+	FreeCamCamera::FreeCamCamera() :
+		Camera() { }
 }

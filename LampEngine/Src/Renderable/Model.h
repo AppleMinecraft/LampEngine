@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Resources/Mesh.h"
+#include "Utils/Transform.h"
 
 namespace LampEngine {
 
@@ -21,7 +22,7 @@ namespace LampEngine {
 		// Returns a pointer to mesh from the given index.
 		Mesh* getMesh(int idx);
 	public:
-		glm::vec3 position, rotation, scale;
+		Transform3D transform;
 		// TODO: manage lightning
 		glm::vec3 lightColor = glm::vec3(1.0f), lightPosition = glm::vec3(0.0f);
 	protected:

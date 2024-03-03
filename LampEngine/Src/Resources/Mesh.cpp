@@ -53,14 +53,14 @@ namespace LampEngine {
 		m_Shader.bind();
 		material.baseTexture->bind();
 		material.roughnessTexture->bind();
-		camera->matrix(*this);
+		camera->_matrix(*this);
 
 		// FLOATS
 		m_Shader.Uniform1f("roughness", material.roughness);
 		// COLORS
 		m_Shader.Uniform3v("baseColor", material.baseColor);
 		// POSITIONS
-		m_Shader.Uniform3v("cameraPos", camera->position);
+		m_Shader.Uniform3v("cameraPos", camera->transform.position);
 		m_VAO.bind();
 
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

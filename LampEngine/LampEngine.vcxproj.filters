@@ -906,11 +906,13 @@
     <ClInclude Include="Src\Buffers\VBO.h" />
     <ClInclude Include="Src\Resources\Image.h" />
     <ClInclude Include="Src\Renderable\Renderable.h" />
-    <ClInclude Include="Src\Renderable\Model.h" />
     <ClInclude Include="Src\Utils\StringUtils.h" />
     <ClInclude Include="Src\Resources\Material.h" />
     <ClInclude Include="Src\Resources\Mesh.h" />
     <ClInclude Include="Src\Core\Input.h" />
+    <ClInclude Include="Src\Renderable\Model.h" />
+    <ClInclude Include="Src\Core\Light.h" />
+    <ClInclude Include="Src\Utils\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Core.cpp">
@@ -949,6 +951,7 @@
     <ClCompile Include="Src\Utils\StringUtils.cpp" />
     <ClCompile Include="Src\Renderable\Renderable.cpp" />
     <ClCompile Include="Src\Core\Input.cpp" />
+    <ClCompile Include="Src\Core\Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

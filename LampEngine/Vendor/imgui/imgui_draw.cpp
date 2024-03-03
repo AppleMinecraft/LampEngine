@@ -415,16 +415,16 @@ void ImDrawList::_ResetForNewFrame()
 
 void ImDrawList::_ClearFreeMemory()
 {
-    CmdBuffer.clear();
-    IdxBuffer.clear();
-    VtxBuffer.clear();
+    CmdBuffer.prepare();
+    IdxBuffer.prepare();
+    VtxBuffer.prepare();
     Flags = ImDrawListFlags_None;
     _VtxCurrentIdx = 0;
     _VtxWritePtr = NULL;
     _IdxWritePtr = NULL;
-    _ClipRectStack.clear();
-    _TextureIdStack.clear();
-    _Path.clear();
+    _ClipRectStack.prepare();
+    _TextureIdStack.prepare();
+    _Path.prepare();
     _Splitter.ClearFreeMemory();
 }
 
@@ -1677,12 +1677,12 @@ void ImDrawListSplitter::ClearFreeMemory()
     {
         if (i == _Current)
             memset(&_Channels[i], 0, sizeof(_Channels[i]));  // Current channel is a copy of CmdBuffer/IdxBuffer, don't destruct again
-        _Channels[i]._CmdBuffer.clear();
-        _Channels[i]._IdxBuffer.clear();
+        _Channels[i]._CmdBuffer.prepare();
+        _Channels[i]._IdxBuffer.prepare();
     }
     _Current = 0;
     _Count = 1;
-    _Channels.clear();
+    _Channels.prepare();
 }
 
 void ImDrawListSplitter::Split(ImDrawList* draw_list, int channels_count)
@@ -2058,8 +2058,8 @@ void    ImFontAtlas::ClearInputData()
             Fonts[i]->ConfigData = NULL;
             Fonts[i]->ConfigDataCount = 0;
         }
-    ConfigData.clear();
-    CustomRects.clear();
+    ConfigData.prepare();
+    CustomRects.prepare();
     PackIdMouseCursors = PackIdLines = -1;
     // Important: we leave TexReady untouched
 }
@@ -2494,7 +2494,7 @@ static bool ImFontAtlasBuildWithStbTruetype(ImFontAtlas* atlas)
     }
     for (int dst_i = 0; dst_i < dst_tmp_array.Size; dst_i++)
         dst_tmp_array[dst_i].GlyphsSet.Clear();
-    dst_tmp_array.clear();
+    dst_tmp_array.prepare();
 
     // Allocate packing character data and flag packed characters buffer as non-packed (x0=y0=x1=y1=0)
     // (We technically don't need to zero-clear buf_rects, but let's do it for the sake of sanity)
@@ -2611,7 +2611,7 @@ static bool ImFontAtlasBuildWithStbTruetype(ImFontAtlas* atlas)
 
     // End packing
     stbtt_PackEnd(&spc);
-    buf_rects.clear();
+    buf_rects.prepare();
 
     // 9. Setup ImFont and glyphs for runtime
     for (int src_i = 0; src_i < src_tmp_array.Size; src_i++)
@@ -3203,9 +3203,9 @@ void    ImFont::ClearOutputData()
 {
     FontSize = 0.0f;
     FallbackAdvanceX = 0.0f;
-    Glyphs.clear();
-    IndexAdvanceX.clear();
-    IndexLookup.clear();
+    Glyphs.prepare();
+    IndexAdvanceX.prepare();
+    IndexLookup.prepare();
     FallbackGlyph = NULL;
     ContainerAtlas = NULL;
     DirtyLookupTables = true;
@@ -3229,8 +3229,8 @@ void ImFont::BuildLookupTable()
 
     // Build lookup table
     IM_ASSERT(Glyphs.Size < 0xFFFF); // -1 is reserved
-    IndexAdvanceX.clear();
-    IndexLookup.clear();
+    IndexAdvanceX.prepare();
+    IndexLookup.prepare();
     DirtyLookupTables = false;
     memset(Used4kPagesMap, 0, sizeof(Used4kPagesMap));
     GrowIndex(max_codepoint + 1);

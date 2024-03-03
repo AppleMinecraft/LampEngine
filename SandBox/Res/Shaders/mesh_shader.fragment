@@ -11,14 +11,13 @@ in vec2 UV;
 
 // uniform float
 uniform float roughness;
-uniform float lightIntensity = 1.5f;
 
 // uniform vec3 - COLORS
 uniform vec3 baseColor;
 uniform vec3 lightColor; 
 
 // uniform vec3 - POSITIONS
-uniform vec3 lightPos; 
+uniform vec3 lightPos;
 uniform vec3 cameraPos;
 
 // uniform sampler2D
@@ -27,12 +26,20 @@ uniform sampler2D roughnessTexture;
 
 void main() { 
     // ambient lighting
-	float ambient = 0.1f;
+	vec3 ambient = vec3(0.1f);
 
     // diffuse lighting
     vec3 normal = normalize(NORMAL);
 	vec3 lightDirection = normalize(lightPos - POSITION);
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
+    float distance = length(lightPos - POSITION);
+    float attenuation = 1.0 / (1.0 + 0.1 * distance + 0.01 * distance * distance);
 
-    FragColor = vec4( texture(baseTexture, UV).rgb * baseColor * COLOR * (diffuse * lightColor) + vec3(ambient * COLOR), 1.0f);
+    // colors
+    vec3 baseColor = texture(baseTexture, UV).rgb * baseColor * COLOR;
+    vec3 diffuseColor = (diffuse * lightColor * attenuation) + ambient;
+
+    
+
+    FragColor = vec4(baseColor * diffuseColor , 1.0f);
 }
