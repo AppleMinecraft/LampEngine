@@ -3,21 +3,18 @@
 
 namespace LampEngine {
 	Model::Model(std::vector<Mesh*>& meshes) :
-		m_Meshes(meshes),
-		position(0.0f),
-		rotation(0.0f),
-		scale(1.0f)
+		m_Meshes(meshes) 
 	{
-		LOGinfo("Loading textures for meshes.");
+		LOGinfo("Loading shaders and textures for meshes.");
+		Shader shader("Res/Shaders/mesh_shader.vertex", "Res/Shaders/mesh_shader.fragment");
 		for (Mesh* mesh : m_Meshes) {
 			mesh->loadTextures();
+			mesh->loadShader(shader);
 		}
 	}
 	void Model::render() {
 		for (Mesh* mesh: m_Meshes) {
-			mesh->position = position;
-			mesh->rotation = rotation;
-			mesh->scale = scale;
+			mesh->transform = transform;
 			mesh->getShader().Uniform3v("lightColor", lightColor);
 			mesh->getShader().Uniform3v("lightPos", lightPosition);
 			mesh->render();

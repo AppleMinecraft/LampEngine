@@ -5,6 +5,7 @@
 #include "Buffers/VAO.h"
 #include "Buffers/VBO.h"
 #include "Core/Shader.h"
+#include "Utils/Transform.h"
 
 namespace LampEngine {
 
@@ -31,7 +32,7 @@ namespace LampEngine {
 		// Return the VAO ID
 		virtual VAO& getVAO() = 0;
 	public:
-		glm::vec3 position, rotation, scale;
+		Transform3D transform;
 		CULL_MODE cullMode;
 		bool depthTest = true;
 	};

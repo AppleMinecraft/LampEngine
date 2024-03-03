@@ -16,7 +16,7 @@ namespace LampEngine {
 	public:
 		// Loads OpenGL And LampEngine Logger etc.
 		static void Init();
-		// Call this after Core::Init if you want ImGui, this initilizes ImGui.
+		// Call this after window creation because it requires window if you want ImGui, this initilizes ImGui.
 		static void ImGui_Init(Window& window);
 		// Call this after Window::Clear to create ImGui new frame.
 		static void ImGui_NewFrame();

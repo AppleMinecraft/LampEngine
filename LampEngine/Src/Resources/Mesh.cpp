@@ -4,15 +4,11 @@
 #include "Buffers/VBO.h"
 #include "Buffers/EBO.h"
 
-#define _TEXTURE_BASE_SLOT 0
-#define _TEXTURE_ROUGHNESS_SLOT 1
-
 namespace LampEngine {
 	Mesh::Mesh(std::string name, std::vector<Vertex>& vertices, std::vector<GLuint>& indices) :
 		name(name),
 		vertices(vertices),
-		indices(indices),
-		m_Shader("Res/Shaders/mesh_shader.vertex", "Res/Shaders/mesh_shader.fragment")
+		indices(indices)
 	{	
 		m_VAO.bind();
 
@@ -29,20 +25,25 @@ namespace LampEngine {
 		m_Shader.bind();
 
 		// BASE TEXTURE
-		if (material.baseTexture != "") {
-			m_BaseTexture = Texture(Image(material.baseTexture, true), _TEXTURE_BASE_SLOT);
-			m_BaseTexture.bind();
+		if (material.baseTexture != nullptr) {
+			material.baseTexture->bind();
 			m_Shader.Uniform1i("baseTexture", _TEXTURE_BASE_SLOT);
 		}
-		else { m_BaseTexture = Texture(*WHITE_IMAGE, _TEXTURE_BASE_SLOT); }
+		else
+			material.baseTexture = new Texture(*WHITE_IMAGE, _TEXTURE_BASE_SLOT);
 
 		// SPECULAR TEXTURE
-		if (material.roughnessTexture != "") {
-			m_RoughnessTexture = Texture(Image(material.roughnessTexture, true), _TEXTURE_ROUGHNESS_SLOT);
-			m_RoughnessTexture.bind();
+		if (material.roughnessTexture != nullptr) {
+			material.roughnessTexture->bind();
 			m_Shader.Uniform1i("roughnessTexture", _TEXTURE_ROUGHNESS_SLOT);
 		}
-		else { m_RoughnessTexture = Texture(*WHITE_IMAGE, _TEXTURE_ROUGHNESS_SLOT); }
+		else 
+			material.roughnessTexture =  new Texture(*WHITE_IMAGE, _TEXTURE_ROUGHNESS_SLOT);
+
+		delete WHITE_IMAGE;
+	}
+	void Mesh::loadShader(Shader shader) {
+		m_Shader = shader;
 	}
 	void Mesh::render() {
 		Renderable::render();
@@ -50,17 +51,16 @@ namespace LampEngine {
 
 		// Bindings
 		m_Shader.bind();
-		m_BaseTexture.bind();
-		m_RoughnessTexture.bind();
-
-		camera->matrix(*this);
+		material.baseTexture->bind();
+		material.roughnessTexture->bind();
+		camera->_matrix(*this);
 
 		// FLOATS
 		m_Shader.Uniform1f("roughness", material.roughness);
 		// COLORS
 		m_Shader.Uniform3v("baseColor", material.baseColor);
 		// POSITIONS
-		m_Shader.Uniform3v("cameraPos", camera->position);
+		m_Shader.Uniform3v("cameraPos", camera->transform.position);
 		m_VAO.bind();
 
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -70,5 +70,13 @@ namespace LampEngine {
 	}
 	VAO& Mesh::getVAO() {
 		return m_VAO;
+	}
+	Mesh* Mesh::CreateMesh(std::string name, std::vector<Vertex>& vertices, std::vector<GLuint>& indices, Material& material) {
+		Mesh* mesh = new Mesh(name, vertices, indices);
+		mesh->material = material;
+		Shader shader("Res/Shaders/mesh_shader.vertex", "Res/Shaders/mesh_shader.fragment");
+		mesh->loadTextures();
+		mesh->loadShader(shader);
+		return mesh;
 	}
 }

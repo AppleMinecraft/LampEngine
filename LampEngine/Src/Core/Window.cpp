@@ -36,9 +36,12 @@ namespace LampEngine {
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
 	}
-	void Window::clear() const {
+	void Window::prepare() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(windowColor.r, windowColor.g, windowColor.b, 1.0f);
+
+		if (camera)
+			camera->update();
 	}
 	void Window::close() const {
 		glfwDestroyWindow(m_Window);

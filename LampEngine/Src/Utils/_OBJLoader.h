@@ -38,17 +38,17 @@ namespace LampEngine {
 		std::vector<Vertex> LoadedVertices;
 		std::vector<unsigned int> LoadedIndices;
 		std::vector<Material> LoadedMaterials;
+		std::vector<Texture*> loadedTextures;
 	private:
-		// This private function is responsible for parsing the data of obj and sorting them.
 		void genVerticesFromRawOBJ(std::vector<Vertex>& outVerts,
 			std::vector<glm::vec3>& inPositions,
 			std::vector<glm::vec2>& inUVs,
 			std::vector<glm::vec3>& inNormals,
 			std::string inCurline);
-		// Triangluate the vertices
+
 		void vertexTriangluation(std::vector<unsigned int>& outIndices,
 			std::vector<Vertex>& inVerts);
-		// Load the materials to LoadedMaterials varible
 		bool LoadMaterials(std::string path);
+		Texture* isTextureAlreadyLoaded(std::string type, std::string path);
 	};
 }

@@ -10,6 +10,7 @@ namespace LampEngine {
 	// The shader class manages OpenGL shaders.
 	class Shader {
 	public:
+		Shader() = default;
 		/*
 		* @param vertexShader: This can be the path to vertex shader file or the vertexShader depending on readFromFile parameter
 		* @param vertexShader: This can be the path to fragment shader file or the fragmentShader depending on readFromFile parameter

@@ -33,6 +33,10 @@ namespace LampEngine {
 
 		// Returns the texture ID that Opengl uses
 		GLuint getID();
+	public:
+		// Not Required!
+		// Stored path to prevent loading same texture twice in model loading
+		const char *path, *type;
 	private:
 		GLuint m_Slot;
 		GLuint m_ID;

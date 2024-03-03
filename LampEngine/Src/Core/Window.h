@@ -23,8 +23,9 @@ namespace LampEngine {
 		// Usage: At end of every frame.
 		void update() const;
 		// Clears the color buffer, depth buffer, etc.
+		// Update the Camera.
 		// Usage: At start of every frame.
-		void clear() const;
+		void prepare();
 		// Closes the glfw window.
 		void close() const;
 

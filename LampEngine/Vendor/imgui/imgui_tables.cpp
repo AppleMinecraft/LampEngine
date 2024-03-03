@@ -3382,7 +3382,7 @@ static void TableSettingsHandler_ClearAll(ImGuiContext* ctx, ImGuiSettingsHandle
     for (int i = 0; i != g.Tables.GetMapSize(); i++)
         if (ImGuiTable* table = g.Tables.TryGetMapData(i))
             table->SettingsOffset = -1;
-    g.SettingsTables.clear();
+    g.SettingsTables.prepare();
 }
 
 // Apply to existing windows (if any)
@@ -3523,9 +3523,9 @@ void ImGui::TableGcCompactTransientBuffers(ImGuiTable* table)
     ImGuiContext& g = *GImGui;
     IM_ASSERT(table->MemoryCompacted == false);
     table->SortSpecs.Specs = NULL;
-    table->SortSpecsMulti.clear();
+    table->SortSpecsMulti.prepare();
     table->IsSortSpecsDirty = true; // FIXME: In theory shouldn't have to leak into user performing a sort on resume.
-    table->ColumnsNames.clear();
+    table->ColumnsNames.prepare();
     table->MemoryCompacted = true;
     for (int n = 0; n < table->ColumnsCount; n++)
         table->Columns[n].NameOffset = -1;
